@@ -44,4 +44,10 @@ public class BookService {
 	public Optional<Book> fetchByBookId(Long bookId) {
 		return bookRepository.findById(bookId);
 	}
+	public List<Book> fetchByAuthorEmail(String authorEmail) {
+		return bookRepository.findByAuthorEmail(authorEmail);
+	}
+	public void deleteBook(Long bookId) {
+		bookRepository.deleteById(bookId);
+	}
 }

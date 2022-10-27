@@ -10,6 +10,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,6 +41,8 @@ public class BookController {
 				User.class);
 		if (user != null) {
 			book.setAuthor(user.getFirstName());
+			book.setStatus(book.getStatus().toLowerCase());
+			book.setActive(book.getActive().toLowerCase());
 		} else {
 			throw new Exception("Author not found!");
 		}
@@ -126,13 +129,13 @@ public class BookController {
 		return book.get().getContent();
 	}
 
-	@PutMapping("/api/v1/digitalbooks/author/{authorId}/books/{bookId}")
+	@PutMapping("/api/v1/digitalbooks/author/{authorEmail}/books/{bookId}")
 	@CrossOrigin(origins = "http://localhost:4200")
-	public Book editBook(@PathVariable("authorId") Long authorId, @PathVariable("bookId") Long bookId,
+	public Book editBook(@PathVariable("authorEmail") String authorEmail, @PathVariable("bookId") Long bookId,
 			@RequestBody Book book) throws Exception {
 		Optional<Book> bookObj = bookService.fetchByBookId(bookId);
 		if (book.getActive() != null) {
-			bookObj.get().setActive(book.getActive());
+			bookObj.get().setActive(book.getActive().toLowerCase());
 		}
 		if (book.getAuthor() != null) {
 			bookObj.get().setAuthor(book.getAuthor());
@@ -150,7 +153,7 @@ public class BookController {
 			bookObj.get().setPublisher(book.getPublisher());
 		}
 		if (book.getStatus() != null) {
-			bookObj.get().setStatus(book.getStatus());
+			bookObj.get().setStatus(book.getStatus().toLowerCase());
 		}
 		if (book.getTitle() != null) {
 			bookObj.get().setTitle(book.getTitle());
@@ -159,9 +162,9 @@ public class BookController {
 		return bookObj.get();
 	}
 
-	@PostMapping("/api/v1/digitalbooks/author/{authorId}/books/{bookId}")
+	@PostMapping("/api/v1/digitalbooks/author/{authorEmail}/books/{bookId}")
 	@CrossOrigin(origins = "http://localhost:4200")
-	public String blockBook(@PathVariable("authorId") Long authorId, @PathVariable("bookId") Long bookId,
+	public String blockBook(@PathVariable("authorEmail") String authorEmail, @PathVariable("bookId") Long bookId,
 			@RequestParam(value = "block") String block) {
 		String status = null;
 		Optional<Book> book = bookService.fetchByBookId(bookId);
@@ -181,5 +184,18 @@ public class BookController {
 	public Book fetchBookById(@PathVariable("bookId") Long bookId) {
 		Optional<Book> bookObj = bookService.fetchByBookId(bookId);
 		return bookObj.get();
+	}
+	
+	@GetMapping("/api/v1/digitalbooks/viewAddedBooks/{authorEmail}")
+	@CrossOrigin(origins = "http://localhost:4200")
+	public List<Book> viewAddedBooksByAuthor(@PathVariable("authorEmail") String authorEmail) {
+		List<Book> bookObj = bookService.fetchByAuthorEmail(authorEmail);
+		return bookObj;
+	}
+	
+	@DeleteMapping("/api/v1/digitalbooks/deleteBook/{bookId}")
+	@CrossOrigin(origins = "http://localhost:4200")
+	public void deleteBook(@PathVariable("bookId") Long bookId) {
+		bookService.deleteBook(bookId);
 	}
 }

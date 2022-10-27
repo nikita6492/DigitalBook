@@ -15,7 +15,7 @@ public class FilterConfig {
 
 //        provide endpoints which needs to be restricted.
 //        All Endpoints would be restricted if unspecified
-		filter.addUrlPatterns("/api/v1/digitalbooks/author/{authorId}/books",
+		filter.addUrlPatterns("/api/v1/digitalbooks/author/{authorEmail}/books",
 				"/api/v1/digitalbooks/reader/{email}/books",
 				"/api/v1/digitalbooks/reader/{email}/books/{subscriptionId}",
 				"/api/v1/digitalbooks/reader/{email}/books/{subscriptionId}/read",

@@ -12,6 +12,8 @@ public class Book {
 	private Double price;
 	
 	private String author;
+	
+	private String authorEmail;
 
 	private String publisher;
 	
@@ -28,13 +30,15 @@ public class Book {
 	}
 
 
-	public Book(String title, String category, Double price, String author, String publisher, String active,
-			String status, String content) {
+	public Book(Long id, String title, String category, Double price, String author, String authorEmail,
+			String publisher, String active, String status, String content) {
 		super();
+		this.id = id;
 		this.title = title;
 		this.category = category;
 		this.price = price;
 		this.author = author;
+		this.authorEmail = authorEmail;
 		this.publisher = publisher;
 		this.active = active;
 		this.status = status;
@@ -92,6 +96,16 @@ public class Book {
 	}
 
 
+	public String getAuthorEmail() {
+		return authorEmail;
+	}
+
+
+	public void setAuthorEmail(String authorEmail) {
+		this.authorEmail = authorEmail;
+	}
+
+
 	public String getPublisher() {
 		return publisher;
 	}
@@ -130,6 +144,8 @@ public class Book {
 	public void setContent(String content) {
 		this.content = content;
 	}
+
+
 	
 	
 	
