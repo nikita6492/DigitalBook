@@ -1,0 +1,23 @@
+.form-vertical{
+    display:block;
+    width:50%;
+    margin:0 auto;
+    height:50%;
+    background-color: white;
+    max-width: 350px;
+    padding: 40px 40px;
+    border-radius: 2%;
+    font-family:Georgia, 'Times New Roman', Times, serif;
+}
+h2{
+    width:50%;
+    margin:0 auto;
+    max-width: 350px;
+    padding: 40px 40px;
+    text-align: center;
+    font-family:Georgia, 'Times New Roman', Times, serif;
+}
+.loginimage{
+    background-image: url('../../assets/images/loginbackground.jpg');
+    height: 100%;
+    }
