@@ -1,0 +1,26 @@
+package com.digitalbooks.service;
+
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import com.digitalbooks.model.Book;
+import com.digitalbooks.repository.BookRepository;
+
+@Service
+public class BookService {
+	
+	@Autowired
+	private BookRepository bookRepository;
+	
+	public Book saveBook(Book book) {
+		return bookRepository.save(book);
+	}
+	public Book fetchByCategoryAndTitleAndPriceAndPublisherAndAuthor(String category,String title,Double price,String publisher,String author) {
+		return bookRepository.findByCategoryAndTitleAndPriceAndPublisherAndAuthor(category,title,price,publisher,author);
+	}
+
+	public Optional<Book> fetchByBookId(Long bookId) {
+		return bookRepository.findById(bookId);
+	}
+}

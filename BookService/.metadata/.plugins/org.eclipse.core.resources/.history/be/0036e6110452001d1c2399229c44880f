@@ -1,0 +1,12 @@
+package com.digitalbooks.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import com.digitalbooks.model.Book;
+
+@Repository
+public interface BookRepository extends JpaRepository<Book, Long> {
+	public Book findByCategoryAndTitleAndPriceAndPublisherAndAuthor(String category,String title,Double price,String publisher,String author);
+
+}
