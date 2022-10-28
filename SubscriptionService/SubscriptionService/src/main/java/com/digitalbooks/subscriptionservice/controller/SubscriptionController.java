@@ -19,7 +19,6 @@ import com.digitalbooks.subscriptionservice.service.SubscriptionService;
 
 
 @RestController
-@CrossOrigin(origins = "*")
 public class SubscriptionController {
 	
 	@Autowired
@@ -29,6 +28,7 @@ public class SubscriptionController {
 	private RestTemplate restTemplate;
 	
 	@PostMapping("/api/v1/digitalbooks/subscribe")
+	@CrossOrigin(origins = "http://localhost:4200")
 	public Long subscribeBook(@RequestParam Long bookId, @RequestParam String email) throws Exception {
 		Subscription subscriptionObj =null;
 		User user = restTemplate.getForObject("http://localhost:9091/api/v1/digitalbooks/fetchuserbyemail/"+email, User.class);
@@ -60,12 +60,13 @@ public class SubscriptionController {
 	}
 	
 
-	@PostMapping("/api/v1/digitalbooks/reader/{email}/books/{subscriptionId}/cancel-subscription")
+	@PostMapping("/api/v1/digitalbooks/reader/{email}/books/{bookId}/cancel-subscription")
+	@CrossOrigin(origins = "http://localhost:4200")
 	public String canceSubscription(@PathVariable("email") String email,
-			@PathVariable("subscriptionId") Long subscriptionId) {
+			@PathVariable("bookId") Long bookId) {
 		String cancel;
 		User user = restTemplate.getForObject("http://localhost:9091/api/v1/digitalbooks/fetchuserbyemail/"+email, User.class);
-		Subscription subscription = subscriptionService.fetchBookIdByUserIdAndSubscriptionId(user.getId(),subscriptionId);
+		Subscription subscription = subscriptionService.fetchByUserIdAndBookId(user.getId(), bookId);
 		subscription.setStatus("unsubscribe");
 		Subscription subscriptionObj =subscriptionService.saveSubscription(subscription);
 		if(subscriptionObj!=null) {
@@ -76,14 +77,30 @@ public class SubscriptionController {
 		return cancel;
 	}
 	
-	@GetMapping("/api/v1/digitalbooks/fetchallsubscribedbook/{userId}")
-	public List<Subscription> fetchAllSubscribedBooks(@PathVariable("userId") Long userId){
-		return subscriptionService.fetchAllSubscribedBooks(userId);
+	@GetMapping("/api/v1/digitalbooks/fetchallsubscribedbook/{userEmail}")
+	@CrossOrigin(origins = "http://localhost:4200")
+	public List<Subscription> fetchAllSubscribedBooks(@PathVariable("userEmail") String userEmail){
+		User user = restTemplate.getForObject("http://localhost:9091/api/v1/digitalbooks/fetchuserbyemail/"+userEmail, User.class);
+		return subscriptionService.fetchAllSubscribedBooks(user.getId());
 	}
 	
-	@GetMapping("/api/v1/digitalbooks/fetchsubscribedbook/{userId}/{subscriptionId}")
-	public Subscription fetchBookIdByUserIdAndSubscriptionId(@PathVariable("userId") Long userId, @PathVariable("subscriptionId") Long subscriptionId) {
-		return subscriptionService.fetchBookIdByUserIdAndSubscriptionId(userId, subscriptionId);
+	@GetMapping("/api/v1/digitalbooks/fetchsubscribedbook/{userEmail}/{subscriptionId}")
+	@CrossOrigin(origins = "http://localhost:4200")
+	public Subscription fetchBookIdByUserIdAndSubscriptionId(@PathVariable("userId") String userEmail, @PathVariable("subscriptionId") Long subscriptionId) {
+		User user = restTemplate.getForObject("http://localhost:9091/api/v1/digitalbooks/fetchuserbyemail/"+userEmail, User.class);
+		return subscriptionService.fetchBookIdByUserIdAndSubscriptionId(user.getId(), subscriptionId);
+	}
+	
+	@GetMapping("/api/v1/digitalbooks/fetchByUserEmailAndBookId/{userEmail}/{bookId}")
+	@CrossOrigin(origins = "http://localhost:4200")
+	public Subscription fetchByUserEmailAndBookId(@PathVariable("userEmail") String userEmail, @PathVariable("bookId") Long bookId) throws Exception{
+		User user = restTemplate.getForObject("http://localhost:9091/api/v1/digitalbooks/fetchuserbyemail/"+userEmail, User.class);
+		Subscription sub= subscriptionService.fetchByUserIdAndBookId(user.getId(), bookId);
+		if(sub!=null) {
+			return sub;
+		}else {
+			throw new Exception("Subscription not found");
+		}
 	}
 	
 }

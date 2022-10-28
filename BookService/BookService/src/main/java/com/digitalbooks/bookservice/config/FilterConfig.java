@@ -20,7 +20,7 @@ public class FilterConfig {
 				"/api/v1/digitalbooks/reader/{email}/books/{subscriptionId}",
 				"/api/v1/digitalbooks/reader/{email}/books/{subscriptionId}/read",
 				"/api/v1/digitalbooks/author/{authorId}/books/{bookId}",
-				"/api/v1/digitalbooks/author/{authorId}/books/{bookId}", "/api/v1/digitalbooks/fetchBookById/{bookId}");
+				"/api/v1/digitalbooks/author/{authorId}/books/{bookId}", "/api/v1/digitalbooks/fetchBookById/{bookId}","/api/v1/digitalbooks/searchForReader");
 		return filter;
 	}
 }

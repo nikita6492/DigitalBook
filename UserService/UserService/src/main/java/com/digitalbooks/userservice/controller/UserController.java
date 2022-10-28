@@ -52,7 +52,7 @@ public class UserController {
 		if(emailId !=null && pass !=null) {
 			userObj = userService.fetchUserByEmailIdAndPassword(emailId,pass);
 			if(userObj == null) {
-				return ("NO user found!!");
+				 throw new Exception("NO user found!!");
 			}
 			
 		}

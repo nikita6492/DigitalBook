@@ -56,17 +56,17 @@ public class BookController {
 			@RequestParam(name = "title", required = false) String title,
 			@RequestParam(name = "author", required = false) String author) throws Exception {
 		List<Book> book = null;
-		if(category!=null && title==null && author==null) {
+		if((category!=null) && (title==null || title.isEmpty()) && (author==null || author.isEmpty())) {
 			book=bookService.findByCategoryAndStatus(category, "unblock");
-		}else if(category==null && title!=null && author==null) {
+		}else if((category==null || category.isEmpty()) && (title!=null) && (author==null || author.isEmpty())) {
 			book=bookService.findByTitleAndStatus(title, "unblock");
-		}else if(category==null && title==null && author!=null) {
+		}else if((category==null || category.isEmpty()) && (title==null || title.isEmpty()) && (author!=null)) {
 			book=bookService.findByAuthorAndStatus(author, "unblock");
-		}else if(category!=null && title!=null && author==null) {
+		}else if(category!=null && title!=null && (author==null || author.isEmpty())) {
 			book=bookService.findByCategoryAndTitleAndStatus(category, title, "unblock");
-		}else if(category!=null && title==null && author!=null) {
+		}else if(category!=null && (title==null || title.isEmpty()) && author!=null) {
 			book=bookService.findByCategoryAndAuthorAndStatus(category, author, "unblock");
-		}else if(category==null && title!=null && author!=null) {
+		}else if((category==null || category.isEmpty()) && title!=null && author!=null) {
 			book=bookService.findByTitleAndAuthorAndStatus(title, author, "unblock");
 		}else if(category!=null && title!=null && author!=null) {
 			book =bookService.findByCategoryAndTitleAndAuthorAndStatus(category, title, author, "unblock");
@@ -116,16 +116,11 @@ public class BookController {
 		return book.get();
 	}
 
-	@GetMapping("/api/v1/digitalbooks/reader/{email}/books/{subscriptionId}/read")
+	@GetMapping("/api/v1/digitalbooks/reader/{email}/books/{bookId}/read")
 	@CrossOrigin(origins = "http://localhost:4200")
 	public String readBookContent(@PathVariable("email") String email,
-			@PathVariable("subscriptionId") Long subscriptionId) {
-		User user = restTemplate.getForObject("http://localhost:9091/api/v1/digitalbooks/fetchuserbyemail/" + email,
-				User.class);
-		Subscription subscription = restTemplate.getForObject(
-				"http://localhost:9093/api/v1/digitalbooks/fetchsubscribedbook/" + user.getId() + "/" + subscriptionId,
-				Subscription.class);
-		Optional<Book> book = bookService.fetchByBookId(subscription.getBookId());
+			@PathVariable("bookId") Long bookId) {
+		Optional<Book> book = bookService.fetchByBookId(bookId);
 		return book.get().getContent();
 	}
 
@@ -197,5 +192,55 @@ public class BookController {
 	@CrossOrigin(origins = "http://localhost:4200")
 	public void deleteBook(@PathVariable("bookId") Long bookId) {
 		bookService.deleteBook(bookId);
+	}
+	
+	@GetMapping("/api/v1/digitalbooks/searchForReader")
+	@CrossOrigin(origins = "http://localhost:4200")
+	public List<Book> searchBookForReader(@RequestParam(name = "category", required = false) String category,
+			@RequestParam(name = "title", required = false) String title,
+			@RequestParam(name = "author", required = false) String author, @RequestParam("email") String email) throws Exception {
+		List<Book> book = null;
+		if((category!=null) && (title==null || title.isEmpty()) && (author==null || author.isEmpty())) {
+			book=bookService.findByCategoryAndStatus(category, "unblock");
+		}else if((category==null || category.isEmpty()) && (title!=null) && (author==null || author.isEmpty())) {
+			book=bookService.findByTitleAndStatus(title, "unblock");
+		}else if((category==null || category.isEmpty()) && (title==null || title.isEmpty()) && (author!=null)) {
+			book=bookService.findByAuthorAndStatus(author, "unblock");
+		}else if(category!=null && title!=null && (author==null || author.isEmpty())) {
+			book=bookService.findByCategoryAndTitleAndStatus(category, title, "unblock");
+		}else if(category!=null && (title==null || title.isEmpty()) && author!=null) {
+			book=bookService.findByCategoryAndAuthorAndStatus(category, author, "unblock");
+		}else if((category==null || category.isEmpty()) && title!=null && author!=null) {
+			book=bookService.findByTitleAndAuthorAndStatus(title, author, "unblock");
+		}else if(category!=null && title!=null && author!=null) {
+			book =bookService.findByCategoryAndTitleAndAuthorAndStatus(category, title, author, "unblock");
+		}
+		User user = restTemplate.getForObject("http://localhost:9091/api/v1/digitalbooks/fetchuserbyemail/" + email,
+				User.class);
+		List<Book> bookList = new ArrayList<>();
+		for(Book b:book) {
+			Boolean flag=false;
+			ParameterizedTypeReference<List<Subscription>> typeRef = new ParameterizedTypeReference<List<Subscription>>() {
+			};
+			ResponseEntity<List<Subscription>> responseEntity = restTemplate.exchange(
+					"http://localhost:9093/api/v1/digitalbooks/fetchallsubscribedbook/" + user.getId(), HttpMethod.GET,
+					null, typeRef);
+			List<Subscription> subscriptionList = responseEntity.getBody();
+			for (Subscription subscription : subscriptionList) {
+				
+				if(b.getId()==subscription.getBookId()) {
+					flag=true;
+				}
+			}
+			if(flag==false) {
+				bookList.add(b);
+			}
+		}
+		
+		if (bookList != null && !bookList.isEmpty()) {
+			return bookList;
+		} else {
+			throw new Exception("No book found!");
+		}
 	}
 }
