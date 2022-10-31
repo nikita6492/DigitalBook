@@ -81,26 +81,23 @@ public class BookController {
 	@SuppressWarnings("unchecked")
 	@GetMapping("/api/v1/digitalbooks/reader/{email}/books")
 	@CrossOrigin(origins = "http://localhost:4200")
-	public List<Book> fetchAllSubscribedBooks(@PathVariable("email") String email) {
-		User user = restTemplate.getForObject("http://localhost:9091/api/v1/digitalbooks/fetchuserbyemail/" + email,
-				User.class);
+	public List<Book> fetchAllSubscribedBooks(@PathVariable("email") String email) throws Exception {
 		ParameterizedTypeReference<List<Subscription>> typeRef = new ParameterizedTypeReference<List<Subscription>>() {
 		};
 		ResponseEntity<List<Subscription>> responseEntity = restTemplate.exchange(
-				"http://localhost:9093/api/v1/digitalbooks/fetchallsubscribedbook/" + user.getId(), HttpMethod.GET,
+				"http://localhost:9093/api/v1/digitalbooks/fetchallsubscribedbook/" + email, HttpMethod.GET,
 				null, typeRef);
 		List<Subscription> subscriptionList = responseEntity.getBody();
-		// System.out.print(subscriptionList);
-		// List<Subscription> subscriptionList =
-		// (List<Subscription>)restTemplate.getForObject("http://localhost:9093/api/v1/digitalbooks/fetchallsubscribedbook/"+user.getId(),
-		// List.class);
+		
 		List<Book> bookList = new ArrayList<>();
 		for (Subscription subscription : subscriptionList) {
 			Optional<Book> book = bookService.fetchByBookId(subscription.getBookId());
 			bookList.add(book.get());
 		}
-
+		if(bookList!=null && !bookList.isEmpty())
 		return bookList;
+		else
+			throw new Exception("No subscribed books for you !!");
 	}
 
 	@GetMapping("/api/v1/digitalbooks/reader/{email}/books/{subscriptionId}")
@@ -118,10 +115,10 @@ public class BookController {
 
 	@GetMapping("/api/v1/digitalbooks/reader/{email}/books/{bookId}/read")
 	@CrossOrigin(origins = "http://localhost:4200")
-	public String readBookContent(@PathVariable("email") String email,
+	public Book readBookContent(@PathVariable("email") String email,
 			@PathVariable("bookId") Long bookId) {
 		Optional<Book> book = bookService.fetchByBookId(bookId);
-		return book.get().getContent();
+		return book.get();
 	}
 
 	@PutMapping("/api/v1/digitalbooks/author/{authorEmail}/books/{bookId}")
@@ -223,7 +220,7 @@ public class BookController {
 			ParameterizedTypeReference<List<Subscription>> typeRef = new ParameterizedTypeReference<List<Subscription>>() {
 			};
 			ResponseEntity<List<Subscription>> responseEntity = restTemplate.exchange(
-					"http://localhost:9093/api/v1/digitalbooks/fetchallsubscribedbook/" + user.getId(), HttpMethod.GET,
+					"http://localhost:9093/api/v1/digitalbooks/fetchallsubscribedbookById/" + user.getId(), HttpMethod.GET,
 					null, typeRef);
 			List<Subscription> subscriptionList = responseEntity.getBody();
 			for (Subscription subscription : subscriptionList) {

@@ -3,6 +3,9 @@ package com.digitalbooks.subscriptionservice.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,7 +36,7 @@ public class SubscriptionController {
 		Subscription subscriptionObj =null;
 		User user = restTemplate.getForObject("http://localhost:9091/api/v1/digitalbooks/fetchuserbyemail/"+email, User.class);
 		String role = user.getRole();
-		if(role!=null && role.equalsIgnoreCase("reader")) {
+		if(role!=null && role.equalsIgnoreCase("Reader")) {
 			Book book=restTemplate.getForObject("http://localhost:9092/api/v1/digitalbooks/fetchBookById/"+bookId, Book.class);
 			String status=book.getStatus();
 			if(status!=null && status.equalsIgnoreCase("unblock")) {
@@ -62,7 +65,7 @@ public class SubscriptionController {
 
 	@PostMapping("/api/v1/digitalbooks/reader/{email}/books/{bookId}/cancel-subscription")
 	@CrossOrigin(origins = "http://localhost:4200")
-	public String canceSubscription(@PathVariable("email") String email,
+	public void canceSubscription(@PathVariable("email") String email,
 			@PathVariable("bookId") Long bookId) {
 		String cancel;
 		User user = restTemplate.getForObject("http://localhost:9091/api/v1/digitalbooks/fetchuserbyemail/"+email, User.class);
@@ -74,7 +77,6 @@ public class SubscriptionController {
 		}else {
 			cancel = "Book is not unsubscribed";
 		}
-		return cancel;
 	}
 	
 	@GetMapping("/api/v1/digitalbooks/fetchallsubscribedbook/{userEmail}")
@@ -82,6 +84,12 @@ public class SubscriptionController {
 	public List<Subscription> fetchAllSubscribedBooks(@PathVariable("userEmail") String userEmail){
 		User user = restTemplate.getForObject("http://localhost:9091/api/v1/digitalbooks/fetchuserbyemail/"+userEmail, User.class);
 		return subscriptionService.fetchAllSubscribedBooks(user.getId());
+	}
+	
+	@GetMapping("/api/v1/digitalbooks/fetchallsubscribedbookById/{userId}")
+	@CrossOrigin(origins = "http://localhost:4200")
+	public List<Subscription> fetchAllSubscribedBooksById(@PathVariable("userId") Long userId){
+		return subscriptionService.fetchAllSubscribedBooks(userId);
 	}
 	
 	@GetMapping("/api/v1/digitalbooks/fetchsubscribedbook/{userEmail}/{subscriptionId}")
