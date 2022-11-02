@@ -1,0 +1,30 @@
+
+<div class="custom-image">
+    <button class="signup" type="submit" (click)="signUp()">Sign Up</button>
+    <button class="signin" type="submit" (click)="signIn()">Sign In</button>
+    <img src="../../assets/images/book logo2.png">
+    <hr/>
+    <h2>Search Books</h2>
+<form class="form-horizontal" #searchform="ngForm" (ngSubmit)=onSubmit()>
+    <div class="form-group">
+      <label class="control-label col-sm-2" for="category">Category:</label>
+        <input type="email" class="form-control" name="category" placeholder="Enter Category" [(ngModel)]="book.category">
+    </div>
+      <div class="form-group">
+        <label class="control-label col-sm-2" for="title">Title:</label>
+          <input type="email" class="form-control" name="title" placeholder="Enter Title" [(ngModel)]="book.title" >
+      </div>
+      <div class="form-group">
+        <label class="control-label col-sm-2" for="author">Author:</label>
+          <input type="email" class="form-control" name="author" placeholder="Enter Author" [(ngModel)]="book.author" >
+      </div>
+    
+    <div class="form-group text-center">
+        <button class="search-book" type="submit">Submit</button>
+    </div>
+  </form>
+
+  <div class="custom-image" >
+    <app-book-table [book]="bookDetails" *ngIf="showBookDetails"></app-book-table>
+  </div>
+</div>

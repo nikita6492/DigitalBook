@@ -1,0 +1,293 @@
+  <h4 style="padding-top: 20px; text-align: center; font-family: 'Times New Roman', Times, serif; font-size: xx-large">Welcome to Author Homepage</h4><br/><br/>
+  <button class="logout" type="submit" (click)="logout()">Logout</button>
+  <button class="addBook" type="submit" (click)="addBookFormOpen()">Add Book</button>
+  <button class="viewBook" type="submit" (click)="viewAddedBooks()">View Added Book</button>
+<hr/>
+  <div class="col-md-4 col-md-offset-4 col-sm-6 col-sm-offset-3 col-xs-12 userForm" *ngIf="isAddedBookForm">
+   
+    <h2>Add Book</h2>
+    <form [formGroup]="bookForm" novalidate >
+        <div class="form-group clearfix" *ngIf="!isEditEnabled">
+          <label>Title:</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="title"
+            name="title"
+          />
+        </div>
+        <div class="form-group clearfix" *ngIf="!isEditEnabled">
+          <label>Category:</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="category"
+            name="category"
+          />
+        </div>
+        <div class="form-group clearfix" *ngIf="!isEditEnabled">
+          <label>Author:</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="author"
+            name="author"
+          />
+        </div>
+        <div class="form-group clearfix" *ngIf="!isEditEnabled">
+          <label>Publisher:</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="publisher"
+            name="publisher"
+          />
+        </div>
+        <div class="form-group clearfix" *ngIf="!isEditEnabled">
+          <label>Price:</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="price"
+            name="price"
+          />
+        </div>
+        <div class="form-group" *ngIf="!isEditEnabled" id="radio-button">          
+            <div style="margin-left: 4px;">
+                <label>Active: &nbsp;&nbsp;&nbsp;</label>
+                <input
+                    type="radio"
+                    formControlName="active"
+                    name="active"
+                    id="yes"
+                    value="Yes"
+                /> &nbsp;Yes  &nbsp;
+                <input
+                    type="radio"
+                    formControlName="active"
+                    name="active"
+                    id="no"
+                    value="No"
+                /> &nbsp;No &nbsp;
+        </div></div>
+        <div class="form-group" id="radio-button">
+          <div style="margin-left: 4px;">
+            <label>Status: &nbsp;&nbsp;&nbsp;</label>
+                <input
+                    type="radio"
+                    formControlName="status"
+                    id="block"
+                    name="status"
+                    value="Block"
+                /> &nbsp;Block &nbsp;
+                <input
+                    type="radio"
+                    formControlName="status"
+                    id="unblock"
+                    name="status"
+                    value="Unblock"
+                /> &nbsp;Unblock &nbsp;
+        </div>
+      </div>
+      <div class="form-group " *ngIf="!isEditEnabled">
+        <label>Content:</label>
+        <textarea
+          class="form-control"
+          formControlName="content"
+          name="content" rows="15" cols="15"
+        ></textarea>
+      </div>
+        <div class="form-group">
+          <button
+            *ngIf="save"
+            type="submit"
+            [disabled]="bookForm.invalid"
+            class="btn btn-primary btn-block saveButton"
+            (click)="saveBook()"
+          >
+            Save
+          </button>
+          <button
+            *ngIf="!save"
+            type="submit"
+            class="btn btn-primary btn-block addButton"
+            (click)="addBook()"
+          >
+            Add
+          </button>
+      </div>
+    </form>
+  </div>
+
+  <div class="col-md-4 col-md-offset-4 col-sm-6 col-sm-offset-3 col-xs-12 userForm" *ngIf="isEditBookForm">
+   
+    <h2>Edit Book</h2>
+    <form [formGroup]="bookForm" novalidate >
+        <div class="form-group clearfix" *ngIf="!isEditEnabled">
+          <label>Title:</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="title"
+            name="title"
+          />
+        </div>
+        <div class="form-group clearfix" *ngIf="!isEditEnabled">
+          <label>Category:</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="category"
+            name="category"
+          />
+        </div>
+        <div class="form-group clearfix" *ngIf="!isEditEnabled">
+          <label>Author:</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="author"
+            name="author"
+          />
+        </div>
+        <div class="form-group clearfix" *ngIf="!isEditEnabled">
+          <label>Publisher:</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="publisher"
+            name="publisher"
+          />
+        </div>
+        <div class="form-group clearfix" *ngIf="!isEditEnabled">
+          <label>Price:</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="price"
+            name="price"
+          />
+        </div>
+
+        <div class="form-group" *ngIf="!isEditEnabled" id="radio-button">          
+            <div class="input-group" style="margin-left: 4px;">
+                <label>Active: &nbsp;</label>
+                <input
+                    type="radio"
+                    formControlName="active"
+                    name="active"
+                    id="yes"
+                    value="Yes"
+                /> &nbsp;Yes  &nbsp;
+                <input
+                    type="radio"
+                    formControlName="active"
+                    name="active"
+                    id="no"
+                    value="No"
+                /> &nbsp;No &nbsp;
+        </div></div>
+        <div class="form-group" id="radio-button">
+            <div class="input-group" style="margin-left: 4px;" >
+                <label>Status:  &nbsp;</label>
+                <input
+                    type="radio"
+                    formControlName="status"
+                    id="block"
+                    name="status"
+                    value="Block"
+                /> &nbsp;Block &nbsp;
+                <input
+                    type="radio"
+                    formControlName="status"
+                    id="unblock"
+                    name="status"
+                    value="Unblock"
+                /> &nbsp;Unblock &nbsp;
+        </div></div>
+
+        <div class="form-group clearfix" *ngIf="!isEditEnabled">
+          <label>Content:</label>
+          <textarea
+            class="form-control"
+            formControlName="content"
+            name="content" rows="15" cols="15"
+          ></textarea>
+        </div>
+      <div class="col-xs-12">
+        <div class="form-group">
+          <button
+            *ngIf="save"
+            type="submit"
+            [disabled]="bookForm.invalid"
+            class="btn btn-primary btn-block saveButton"
+            (click)="saveBook()"
+          >
+            Save
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div *ngIf="showBookDetails">
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Book ID</th>
+        <th>Book Title</th>
+        <th>Book Author</th>
+        <th>Book Category</th>
+        <th>Book Publisher</th>
+        <th>Book Price</th>
+        <th>Book Status</th>
+        <th>Edit Options</th>
+        <th>Block/Unblock</th>
+      </tr>
+    </thead>
+    <tbody>
+       <tr *ngFor="let book of bookArray">
+        <td>{{ book.id }}</td>
+        <td>{{ book.title }}</td>
+        <td>{{ book.author }}</td>
+        <td>{{ book.category }}</td>
+        <td>{{ book.publisher }}</td>
+        <td>{{book.price}}</td>
+        <td>{{ book.status }}</td>
+        <td>
+          <button
+            type="button"
+            class="btn btn-success btn-sm"
+            (click)="editBook(book)"
+          >
+            Edit
+          </button>&nbsp;&nbsp;
+          <button
+            type="button"
+            class="btn btn-danger btn-sm"
+            (click)="deleteBook(book.id)"
+          >
+            Delete
+          </button>
+        </td>
+        <td>
+          <button
+            type="button"
+            *ngIf="book.status == 'unblock'"
+            class="btn btn-success btn-sm"
+            (click)="block(book.id)"
+          >
+            Block
+          </button> &nbsp;
+          <button
+            type="button"
+            *ngIf="book.status == 'block'"
+            class="btn btn-success btn-sm"
+            (click)="unblock(book.id)"
+          >
+            Unblock
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

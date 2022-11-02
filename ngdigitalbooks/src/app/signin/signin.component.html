@@ -1,0 +1,26 @@
+<div class="container mt-3">
+    <h2>SIGN IN</h2>
+    <form #signinform="ngForm" (ngSubmit)=signinUser() class="custom-form">
+      <img src="../../assets/images/login.png" class="loginlogo">
+      <strong><small class="text-danger">{{msg}}</small></strong>
+      <div class="mb-3 mt-3">
+        <label for="email">Email:</label>
+        <input type="email" class="form-control" placeholder="Enter email" name="email" [(ngModel)]="user.email" required pattern="^\w+@[a-zA-Z_]+?\.[a-zA-z]{2,3}$" #email="ngModel"
+        [class.is-invalid]="email.invalid && email.touched"
+        >
+      </div>
+      <div *ngIf="email.errors && (email.invalid && email.touched)">
+        <small class="text-danger" *ngIf="email.errors.required">Email Id is required field.</small> 
+        <small class="text-danger" *ngIf="email.errors.pattern">Enter valid Email Id.</small>
+      </div>
+      <div class="mb-3">
+        <label for="pwd">Password:</label>
+        <input type="password" class="form-control" placeholder="Enter password" name="password" [(ngModel)]="user.password" required #password ="ngModel"
+        [class.is-invalid]="password.invalid && password.touched"
+        >
+        <small class="text-danger" [class.d-none]="password.valid || password.untouched">Password is required.</small>
+      </div>
+      <button [disabled]="signinform.form.invalid" type="submit" class="btn btn-success">SIGN IN</button>
+      <small class="float-end" [routerLink]="['/signup']">New user? Register Here</small>
+    </form>
+  </div>

@@ -1,0 +1,36 @@
+.custom-form{
+    display:block;
+    width:50%;
+    margin:0 auto;
+    height:50%;
+    background-color: white;
+    max-width: 350px;
+    padding: 40px 40px;
+    border-radius: 2%;
+    font-family:Georgia, 'Times New Roman', Times, serif;
+}
+h2{
+    width:50%;
+    margin:0 auto;
+    max-width: 350px;
+    padding: 20px 20px;
+    text-align: center;
+    font-family:Georgia, 'Times New Roman', Times, serif;
+}
+/*.loginimage{
+    background-image: url('../../assets/images/loginbackground.jpg');
+    height: 100%;
+    width: 100%;
+        background-position: center center;
+        background-repeat: repeat;
+        background-size: cover;
+   }
+  */
+  input {
+ 
+    box-shadow: 3px 3px 5px grey;
+   
+  }
+  select{
+    box-shadow: 3px 3px 5px grey;
+  }

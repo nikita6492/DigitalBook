@@ -1,0 +1,135 @@
+<h4 style="padding-top: 20px; text-align: center; font-family: 'Times New Roman', Times, serif; font-size: xx-large">Welcome to Reader Homepage</h4><br/><br/>
+<button class="logout" type="submit" (click)="logout()">Logout</button>
+<button class="viewBook" type="submit" (click)="viewSubscribedBooks()">Subscribed Books</button>
+<button class="searchBook" type="submit" (click)="searchBookFormOpen()">Search Book</button>
+<hr/>
+
+  
+  <div class="col-md-4 col-md-offset-4 col-sm-6 col-sm-offset-3 col-xs-12 userForm"  *ngIf="isSearcBookFormEnabled">
+    <h3>Search Registration</h3>
+    <form [formGroup]="searchForm" novalidate >
+        <div class="form-group clearfix" >
+          <label>Title:</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="title"
+            name="title"
+          />
+        </div>
+        <div class="form-group clearfix">
+          <label>Category:</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="category"
+            name="category"
+          />
+        </div>
+        <div class="form-group clearfix">
+          <label>Author:</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="author"
+            name="author"
+          />
+        </div>
+        
+    
+        
+        
+      <div class="col-xs-12">
+        <div class="form-group">
+          <button
+            type="submit"
+            class="btn btn-primary btn-block searchButton"
+            (click)="searchBook()"
+          >
+            Search
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div *ngIf="isSubscribedShowBookDetails">
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Book ID</th>
+        <th>Book Title</th>
+        <th>Book Author</th>
+        <th>Book Category</th>
+        <th>Book Publisher</th>
+        <th>Book Price</th>
+        <th>Book Status</th>
+        <th>View Options</th>
+        <th>Subscribe/Unsubscribe</th>
+      </tr>
+    </thead>
+    <tbody>
+       <tr *ngFor="let book of subscribedBookArray">
+        <td>{{ book.id }}</td>
+        <td>{{ book.title }}</td>
+        <td>{{ book.author }}</td>
+        <td>{{ book.category }}</td>
+        <td>{{ book.publisher }}</td>
+        <td>{{book.price}}</td>
+        <td>{{ book.status }}</td>
+        <td>
+          <button
+            type="button"
+            class="btn btn-success btn-sm"
+            (click)="viewContent(book.id)"
+          >
+            View
+          </button>
+        </td>
+        <td>
+          <button
+            type="button"
+            class="btn btn-success btn-sm"
+            (click)="unsubscribe(book.id)"
+          >
+            Unsubscribe
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div *ngIf="showBookDetails">
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Book ID</th>
+        <th>Book Title</th>
+        <th>Book Author</th>
+        <th>Book Category</th>
+        <th>Book Publisher</th>
+        <th>Book Price</th>
+        <th>Subscribe/Unsubscribe</th>
+      </tr>
+    </thead>
+    <tbody>
+       <tr *ngFor="let book of bookArray">
+        <td>{{ book.id }}</td>
+        <td>{{ book.title }}</td>
+        <td>{{ book.author }}</td>
+        <td>{{ book.category }}</td>
+        <td>{{ book.publisher }}</td>
+        <td>{{book.price}}</td>
+        <td>
+          <button
+            type="button"
+            class="btn btn-success btn-sm"
+            (click)="subscribe(book.id)"
+          >
+            Subscribe
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

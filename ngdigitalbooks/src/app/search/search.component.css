@@ -1,0 +1,109 @@
+
+
+           h2{
+            width:50%;
+            margin:0 auto;
+            max-width: 350px;
+            margin-left: 600px;
+            padding: 40px 40px;
+            text-align: center;
+            font-family:Georgia, 'Times New Roman', Times, serif;
+        }  
+
+  .button:hover {
+    box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+  }
+
+  form {
+    width: 80%;
+    margin: 30px 200px;
+  }
+  
+  label,
+  input {
+    /* In order to define widths */
+    display: inline-block;
+   
+  }
+
+  
+  label {
+    width: 30%;
+    /* Positions the label text beside the input */
+    text-align: right;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+  }
+  
+  input {
+    /* Large margin-right to force the next element to the new-line
+             and margin-left to create a gutter between the label and input */
+    margin: 0 30% 0 4%;
+    padding: 8px;
+    box-shadow: 3px 3px 5px grey;
+    font-size: 14px;
+    font-weight: 600;
+    width: 25%;
+    margin-bottom: 20px;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+  }
+  
+  
+  /* Only the submit button is matched by this selector,
+         but to be sure you could use an id or class for that button */
+  
+  input+input {
+    float: right;
+  }
+
+  .signup {
+    line-height: 5px;
+    width: 150px;
+    height: 40px;
+    font-size: 12pt;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    margin-top: 2%;
+    margin-right: 4%;
+    position: absolute;
+    top: 85px;
+    right: 190px;
+    background-color: #878f92;
+    border-radius: 4px;
+    border:none;
+    color: white;
+}
+
+  .signin {
+        line-height: 5px;
+        width: 150px;
+        height: 40px;
+        font-size: 12pt;
+        font-family: Georgia, 'Times New Roman', Times, serif;
+        margin-top: 2%;
+        margin-right: 4%;
+        position: absolute;
+        top: 85px;
+        right: 20px;
+        background-color:#4CAF50; /* Green */
+        border-radius: 4px;
+        border:none;
+        color: white;
+}
+
+.search-book{
+  background-color:#4CAF50; /* Green */
+  border-radius: 4px;
+  border:none;
+  color: white;
+  width: 150px;
+  height: 40px;
+    margin-right: 100px;
+font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+img{
+    width: 150px;
+    height: 150px;;
+    margin:0 auto 10px ;
+    display: block;
+
+}

@@ -1,0 +1,29 @@
+<div style="  background-image: url('../../assets/images/loginbackground.jpg');
+height: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+">
+    <table name="bookTable">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Category</th>
+            <th>Price</th>
+            <th>Author</th>
+            <th>Publisher</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let book of book">
+            <td>{{ book.id }}</td>
+            <td>{{ book.title }}</td>
+            <td>{{ book.category }}</td>
+            <td>{{ book.price}}</td>
+            <td>{{book.author}}</td>
+            <td>{{book.publisher}}</td>
+          </tr>
+        </tbody>
+      </table>
+</div>

@@ -1,0 +1,171 @@
+.logout {
+    line-height: 5px;
+    width: 150px;
+    height: 40px;
+    font-size: 14pt;
+    /* margin-top: 7px; */
+    /* margin-right: -104px; */
+    position: absolute;
+    top: 72px;
+    right: 89px;
+    background-color: red;
+    border-radius: 4px;
+    border: none;
+    color: white;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+.viewBook{
+    background-color: rgb(228, 172, 67);
+    line-height: 5px;
+    width: 173px;
+    height: 40px;
+    font-size: 14pt;
+    /* margin-top: 7px; */
+    /* margin-right: -104px; */
+    position: absolute;
+    top: 72px;
+    left:300px;
+    border-radius: 4px;
+    border: none;
+    color: white;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+.searchBook{
+    background-color: rgb(228, 172, 67);
+    line-height: 5px;
+    width: 173px;
+    height: 40px;
+    font-size: 14pt;
+    position: absolute;
+    top: 72px;
+    /* right: 307px; */
+    left: 100px;
+    border-radius: 4px;
+    border: none;
+    color: white;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+/*h3{
+  text-align: center;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+}*/
+/*.custom-container{  background-image: url('../../assets/images/loginbackground.jpg');
+height: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}*/
+
+table {
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 80%;
+    margin-left: 160px;
+    margin-top: 100px;
+  }
+  
+  td, th {
+    border: 1px solid #ddd;
+    padding: 10px;
+  }
+  
+
+  
+ tr:hover {background-color: #ddd;}
+  
+   th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #04AA6D;
+    color: white;
+  }
+
+  form {
+    width: 100%;
+    margin: 100px 600px;
+    margin-top: 20px;
+  }
+  
+  
+  label {
+    width: 20%;
+    /* Positions the label text beside the input */
+    text-align: right;
+    display: inline-block;
+    font-family:Georgia, 'Times New Roman', Times, serif;
+  }
+  input[type=text] {
+    padding: 12px 20px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    -webkit-transition: 0.5s;
+    transition: 0.5s;
+    outline: none;
+    margin: 0 30% 0 4%;
+    padding: 8px;
+    box-shadow: 3px 3px 5px grey;
+    font-size: 14px;
+    font-weight: 600;
+    width: 35%;
+    margin-bottom: 20px;
+    display: inline-block;
+    
+
+  }
+  
+  textarea {
+    
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    transition: 0.5s;
+    /* outline: none; */
+    margin: 0 30% 0 4%;
+    padding: 8px;
+    box-shadow: 3px 3px 5px grey;
+    /* font-size: 14px; */
+    /* font-weight: 600; */
+    width: 40%;
+    overflow-y: scroll;
+    resize: none;
+    /* margin-bottom: -63px; */
+    display: inline-block;
+
+  }
+  input[type=text]:focus {
+    border: 1px solid #555;
+  }
+
+  input[type=button], input[type=submit], input[type=reset] {
+    background-color: #04AA6D;
+    border: none;
+    color: white;
+    padding: 16px 32px;
+    text-decoration: none;
+    margin: 4px 2px;
+    cursor: pointer;
+  }
+
+  #radio-button{
+      padding: 14px;
+      margin-left: 14px;
+  }
+
+  h3{
+    width:50%;
+    margin:0 auto;
+    max-width: 350px;
+    margin-left: 655px;
+    text-align: center;
+    font-family:Georgia, 'Times New Roman', Times, serif;
+}  
+
+
+
+.searchButton{
+ margin-left: 35%;
+}
