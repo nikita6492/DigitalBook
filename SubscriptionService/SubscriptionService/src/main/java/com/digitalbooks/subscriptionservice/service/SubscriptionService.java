@@ -31,6 +31,9 @@ public class SubscriptionService {
 		return subscriptionRepository.findByUserIdAndId(userId, subscriptionId);
 	}
 	
+	public Subscription fetchByUserIdAndBookIdAndStatus(Long userId, Long bookId, String status){
+		return subscriptionRepository.findByUserIdAndBookIdAndStatus(userId, bookId, status);
+	}
 	public Subscription fetchByUserIdAndBookId(Long userId, Long bookId){
 		return subscriptionRepository.findByUserIdAndBookId(userId, bookId);
 	}

@@ -1,5 +1,7 @@
 package com.digitalbooks.bookservice.controller;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -8,7 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.ResponseEntity.BodyBuilder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.digitalbooks.bookservice.entity.Book;
 import com.digitalbooks.bookservice.entity.Subscription;
@@ -26,6 +31,7 @@ import com.digitalbooks.bookservice.entity.User;
 import com.digitalbooks.bookservice.service.BookService;
 
 @RestController
+@CrossOrigin(origins = "*")
 public class BookController {
 
 	@Autowired
@@ -35,7 +41,7 @@ public class BookController {
 	private RestTemplate restTemplate;
 
 	@PostMapping("/api/v1/digitalbooks/author/{authorEmail}/books")
-	@CrossOrigin(origins = "http://localhost:4200")
+	//@CrossOrigin(origins = "http://localhost:4200")
 	public Book createBook(@PathVariable("authorEmail") String authorEmail, @RequestBody Book book) throws Exception {
 		User user = restTemplate.getForObject("http://localhost:9091/api/v1/digitalbooks/fetchuserbyemail/" + authorEmail,
 				User.class);
@@ -51,7 +57,7 @@ public class BookController {
 	}
 
 	@GetMapping("/api/v1/digitalbooks/search")
-	@CrossOrigin(origins = "http://localhost:4200")
+	//@CrossOrigin(origins = "http://localhost:4200")
 	public List<Book> searchBook(@RequestParam(name = "category", required = false) String category,
 			@RequestParam(name = "title", required = false) String title,
 			@RequestParam(name = "author", required = false) String author) throws Exception {
@@ -80,7 +86,7 @@ public class BookController {
 
 	@SuppressWarnings("unchecked")
 	@GetMapping("/api/v1/digitalbooks/reader/{email}/books")
-	@CrossOrigin(origins = "http://localhost:4200")
+	//@CrossOrigin(origins = "http://localhost:4200")
 	public List<Book> fetchAllSubscribedBooks(@PathVariable("email") String email) throws Exception {
 		ParameterizedTypeReference<List<Subscription>> typeRef = new ParameterizedTypeReference<List<Subscription>>() {
 		};
@@ -101,7 +107,7 @@ public class BookController {
 	}
 
 	@GetMapping("/api/v1/digitalbooks/reader/{email}/books/{subscriptionId}")
-	@CrossOrigin(origins = "http://localhost:4200")
+	//@CrossOrigin(origins = "http://localhost:4200")
 	public Book fetchSubscribedBook(@PathVariable("email") String email,
 			@PathVariable("subscriptionId") Long subscriptionId) {
 		User user = restTemplate.getForObject("http://localhost:9091/api/v1/digitalbooks/fetchuserbyemail/" + email,
@@ -114,7 +120,7 @@ public class BookController {
 	}
 
 	@GetMapping("/api/v1/digitalbooks/reader/{email}/books/{bookId}/read")
-	@CrossOrigin(origins = "http://localhost:4200")
+	//@CrossOrigin(origins = "http://localhost:4200")
 	public Book readBookContent(@PathVariable("email") String email,
 			@PathVariable("bookId") Long bookId) {
 		Optional<Book> book = bookService.fetchByBookId(bookId);
@@ -122,7 +128,7 @@ public class BookController {
 	}
 
 	@PutMapping("/api/v1/digitalbooks/author/{authorEmail}/books/{bookId}")
-	@CrossOrigin(origins = "http://localhost:4200")
+	//@CrossOrigin(origins = "http://localhost:4200")
 	public Book editBook(@PathVariable("authorEmail") String authorEmail, @PathVariable("bookId") Long bookId,
 			@RequestBody Book book) throws Exception {
 		Optional<Book> bookObj = bookService.fetchByBookId(bookId);
@@ -155,7 +161,7 @@ public class BookController {
 	}
 
 	@PostMapping("/api/v1/digitalbooks/author/{authorEmail}/books/{bookId}")
-	@CrossOrigin(origins = "http://localhost:4200")
+	//@CrossOrigin(origins = "http://localhost:4200")
 	public String blockBook(@PathVariable("authorEmail") String authorEmail, @PathVariable("bookId") Long bookId,
 			@RequestParam(value = "block") String block) {
 		String status = null;
@@ -172,27 +178,27 @@ public class BookController {
 	}
 
 	@GetMapping("/api/v1/digitalbooks/fetchBookById/{bookId}")
-	@CrossOrigin(origins = "http://localhost:4200")
+	//@CrossOrigin(origins = "http://localhost:4200")
 	public Book fetchBookById(@PathVariable("bookId") Long bookId) {
 		Optional<Book> bookObj = bookService.fetchByBookId(bookId);
 		return bookObj.get();
 	}
 	
 	@GetMapping("/api/v1/digitalbooks/viewAddedBooks/{authorEmail}")
-	@CrossOrigin(origins = "http://localhost:4200")
+	//@CrossOrigin(origins = "http://localhost:4200")
 	public List<Book> viewAddedBooksByAuthor(@PathVariable("authorEmail") String authorEmail) {
 		List<Book> bookObj = bookService.fetchByAuthorEmail(authorEmail);
 		return bookObj;
 	}
 	
 	@DeleteMapping("/api/v1/digitalbooks/deleteBook/{bookId}")
-	@CrossOrigin(origins = "http://localhost:4200")
+	//@CrossOrigin(origins = "http://localhost:4200")
 	public void deleteBook(@PathVariable("bookId") Long bookId) {
 		bookService.deleteBook(bookId);
 	}
 	
 	@GetMapping("/api/v1/digitalbooks/searchForReader")
-	@CrossOrigin(origins = "http://localhost:4200")
+	//@CrossOrigin(origins = "http://localhost:4200")
 	public List<Book> searchBookForReader(@RequestParam(name = "category", required = false) String category,
 			@RequestParam(name = "title", required = false) String title,
 			@RequestParam(name = "author", required = false) String author, @RequestParam("email") String email) throws Exception {
@@ -240,4 +246,25 @@ public class BookController {
 			throw new Exception("No book found!");
 		}
 	}
+	
+	@GetMapping("/api/v1/digitalbooks/reader/{readerEmail}/viewInvoice")
+	private Double viewInvoice(@PathVariable("readerEmail") String readerEmail) {
+		Double invoice=(double) 0;
+		ParameterizedTypeReference<List<Subscription>> typeRef = new ParameterizedTypeReference<List<Subscription>>() {
+		};
+		ResponseEntity<List<Subscription>> responseEntity = restTemplate.exchange(
+				"http://localhost:9093/api/v1/digitalbooks/fetchallsubscribedbook/" + readerEmail, HttpMethod.GET,
+				null, typeRef);
+		List<Subscription> subscriptionList = responseEntity.getBody();
+		
+		
+		for (Subscription subscription : subscriptionList) {
+			Optional<Book> book = bookService.fetchByBookId(subscription.getBookId());
+			invoice=invoice+book.get().getPrice();
+		}
+		
+		
+		return invoice;
+	}
+
 }

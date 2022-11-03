@@ -34,10 +34,13 @@ public class Book {
 	private String content;
 	
 	
+	
 	public Book() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
+
+
 
 
 	public Book(Long id, String title, String category, Double price, String author, String authorEmail,
@@ -53,6 +56,7 @@ public class Book {
 		this.active = active;
 		this.status = status;
 		this.content = content;
+		
 	}
 
 

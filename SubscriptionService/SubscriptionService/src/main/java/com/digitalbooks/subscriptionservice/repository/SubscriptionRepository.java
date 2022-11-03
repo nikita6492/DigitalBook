@@ -20,6 +20,7 @@ public interface SubscriptionRepository extends JpaRepository<Subscription, Long
 	public Subscription findByUserIdAndId(Long userId, Long id);
 	
 	
+	public Subscription findByUserIdAndBookIdAndStatus(Long userId, Long bookId, String status);
 	public Subscription findByUserIdAndBookId(Long userId, Long bookId);
 	
 }

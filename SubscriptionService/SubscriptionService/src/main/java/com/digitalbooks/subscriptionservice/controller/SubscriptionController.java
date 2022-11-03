@@ -69,11 +69,12 @@ public class SubscriptionController {
 			@PathVariable("bookId") Long bookId) {
 		String cancel;
 		User user = restTemplate.getForObject("http://localhost:9091/api/v1/digitalbooks/fetchuserbyemail/"+email, User.class);
-		Subscription subscription = subscriptionService.fetchByUserIdAndBookId(user.getId(), bookId);
+		Subscription subscription = subscriptionService.fetchByUserIdAndBookIdAndStatus(user.getId(), bookId, "subscribe");
 		subscription.setStatus("unsubscribe");
 		Subscription subscriptionObj =subscriptionService.saveSubscription(subscription);
 		if(subscriptionObj!=null) {
 			cancel = "Book is successfully unsubscribed";
+	
 		}else {
 			cancel = "Book is not unsubscribed";
 		}
