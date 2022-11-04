@@ -5,12 +5,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.zip.DataFormatException;
+import java.util.zip.Deflater;
+import java.util.zip.Inflater;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.ResponseEntity.BodyBuilder;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -21,6 +25,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
@@ -40,24 +45,63 @@ public class BookController {
 	@Autowired
 	private RestTemplate restTemplate;
 
-	@PostMapping("/api/v1/digitalbooks/author/{authorEmail}/books")
-	//@CrossOrigin(origins = "http://localhost:4200")
-	public Book createBook(@PathVariable("authorEmail") String authorEmail, @RequestBody Book book) throws Exception {
+	@PostMapping(value = {"/api/v1/digitalbooks/author/{authorEmail}/books"}, consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+	public Book createBook(@PathVariable("authorEmail") String authorEmail, @RequestPart("book") Book book,
+			@RequestPart("imageFile") MultipartFile file) throws Exception {
 		User user = restTemplate.getForObject("http://localhost:9091/api/v1/digitalbooks/fetchuserbyemail/" + authorEmail,
 				User.class);
+		
 		if (user != null) {
 			book.setAuthor(user.getFirstName());
 			book.setStatus(book.getStatus().toLowerCase());
 			book.setActive(book.getActive().toLowerCase());
+			book.setPicByte(compressBytes(file.getBytes()));
 		} else {
 			throw new Exception("Author not found!");
 		}
 		bookService.saveBook(book);
 		return book;
 	}
+	
 
+	public static byte[] compressBytes(byte[] data) {
+		Deflater deflater = new Deflater();
+		deflater.setInput(data);
+		deflater.finish();
+
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream(data.length);
+		byte[] buffer = new byte[1024];
+		while (!deflater.finished()) {
+			int count = deflater.deflate(buffer);
+			outputStream.write(buffer, 0, count);
+		}
+		try {
+			outputStream.close();
+		} catch (IOException e) {
+		}
+		System.out.println("Compressed Image Byte Size - " + outputStream.toByteArray().length);
+
+		return outputStream.toByteArray();
+	}
+	
+	public static byte[] decompressBytes(byte[] data) {
+		Inflater inflater = new Inflater();
+		inflater.setInput(data);
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream(data.length);
+		byte[] buffer = new byte[1024];
+		try {
+			while (!inflater.finished()) {
+				int count = inflater.inflate(buffer);
+				outputStream.write(buffer, 0, count);
+			}
+			outputStream.close();
+		} catch (IOException ioe) {
+		} catch (DataFormatException e) {
+		}
+		return outputStream.toByteArray();
+	}
+	
 	@GetMapping("/api/v1/digitalbooks/search")
-	//@CrossOrigin(origins = "http://localhost:4200")
 	public List<Book> searchBook(@RequestParam(name = "category", required = false) String category,
 			@RequestParam(name = "title", required = false) String title,
 			@RequestParam(name = "author", required = false) String author) throws Exception {
@@ -78,7 +122,12 @@ public class BookController {
 			book =bookService.findByCategoryAndTitleAndAuthorAndStatus(category, title, author, "unblock");
 		}
 		if (book != null ) {
-			return book;
+			List<Book> bookList=new ArrayList();
+			for(Book b: book) {
+				b.setPicByte(decompressBytes(b.getPicByte()));
+				bookList.add(b);
+			}
+			return bookList;
 		} else {
 			throw new Exception("No book found!");
 		}
@@ -100,8 +149,14 @@ public class BookController {
 			Optional<Book> book = bookService.fetchByBookId(subscription.getBookId());
 			bookList.add(book.get());
 		}
-		if(bookList!=null && !bookList.isEmpty())
-		return bookList;
+		if(bookList!=null && !bookList.isEmpty()) {
+			List<Book> bookListObj=new ArrayList();
+		for(Book b: bookList) {
+			b.setPicByte(decompressBytes(b.getPicByte()));
+			bookListObj.add(b);
+		}
+		return bookListObj;
+		}
 		else
 			throw new Exception("No subscribed books for you !!");
 	}
@@ -188,7 +243,12 @@ public class BookController {
 	//@CrossOrigin(origins = "http://localhost:4200")
 	public List<Book> viewAddedBooksByAuthor(@PathVariable("authorEmail") String authorEmail) {
 		List<Book> bookObj = bookService.fetchByAuthorEmail(authorEmail);
-		return bookObj;
+		List<Book> bookList=new ArrayList();
+		for(Book b: bookObj) {
+			b.setPicByte(decompressBytes(b.getPicByte()));
+			bookList.add(b);
+		}
+		return bookList;
 	}
 	
 	@DeleteMapping("/api/v1/digitalbooks/deleteBook/{bookId}")
@@ -241,7 +301,12 @@ public class BookController {
 		}
 		
 		if (bookList != null && !bookList.isEmpty()) {
-			return bookList;
+			List<Book> bookListObj=new ArrayList();
+			for(Book b: bookList) {
+				b.setPicByte(decompressBytes(b.getPicByte()));
+				bookListObj.add(b);
+			}
+			return bookListObj;
 		} else {
 			throw new Exception("No book found!");
 		}

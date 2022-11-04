@@ -1,0 +1,5 @@
+package com.digitalbooks.bookservice.entity;
+
+public class ImageModel {
+
+}

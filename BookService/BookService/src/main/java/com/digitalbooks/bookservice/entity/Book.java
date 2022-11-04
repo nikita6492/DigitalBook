@@ -1,10 +1,17 @@
 package com.digitalbooks.bookservice.entity;
 
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -33,14 +40,14 @@ public class Book {
 	@Column
 	private String content;
 	
+	@Column(length = 10000)
+	private byte[] picByte;
 	
 	
 	public Book() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-
-
 
 
 	public Book(Long id, String title, String category, Double price, String author, String authorEmail,
@@ -158,6 +165,18 @@ public class Book {
 	public void setContent(String content) {
 		this.content = content;
 	}
+
+
+	public byte[] getPicByte() {
+		return picByte;
+	}
+
+
+	public void setPicByte(byte[] picByte) {
+		this.picByte = picByte;
+	}
+
+
 
 
 	
