@@ -86,7 +86,7 @@ console.log(headers);
     return this._http.get<any>(`http://localhost:9092/api/v1/digitalbooks/reader/${email}/books`,{headers:headers});
   }
 
-  public addBookToRemote(book:Book,token:any){
+  public addBookToRemote(book:FormData,token:any){
     let user_email=sessionStorage.getItem("user_email");
     let tokenStr=`Bearer ${token}`;
    const headers:HttpHeaders = new HttpHeaders().set('Authorization',tokenStr).set('Access-Control-Allow-Headers','Origin, Content-Type, X-Auth-Token')
@@ -131,6 +131,13 @@ console.log(headers);
    const headers:HttpHeaders = new HttpHeaders().set('Authorization',tokenStr).set('Access-Control-Allow-Headers','Origin, Content-Type, X-Auth-Token')
    .set('Access-Control-Allow-Origin','*').set('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, DELETE, OPTIONS');
    return this._http.get<any>(`http://localhost:9091/api/v1/digitalbooks/fetchuserbyemail/${email}`,{headers:headers});
+  }
+
+  public getInvoiceFromRemote(email:any,token:any){
+    let tokenStr=`Bearer ${token}`;
+   const headers:HttpHeaders = new HttpHeaders().set('Authorization',tokenStr).set('Access-Control-Allow-Headers','Origin, Content-Type, X-Auth-Token')
+   .set('Access-Control-Allow-Origin','*').set('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, DELETE, OPTIONS');
+   return this._http.get<any>(`http://localhost:9092/api/v1/digitalbooks/reader/${email}/viewInvoice`,{headers:headers});
   }
 
   public getSubscriptionStatusFromRemote(email:any,id:number,token:any){

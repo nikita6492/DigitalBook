@@ -13,6 +13,8 @@ export class SearchComponent implements OnInit {
   book=new Book();
   showBookDetails: boolean = false;
   bookDetails: any;
+  retrievedImage: any;
+  base64Data: any;
   constructor(
     private formBuilder: FormBuilder,private route:Router,private _service:DigitalBooksService
   ) {}
@@ -28,8 +30,18 @@ export class SearchComponent implements OnInit {
       console.log("response received",data,this.showBookDetails)
       this.showBookDetails = true
       this.bookDetails = data
-      console.log(this.bookDetails,this.showBookDetails)
-    }
+     
+      if(this.bookDetails.length>0){
+        for(let i=0; i<this.bookDetails.length;i++){
+         this.base64Data = this.bookDetails[i].picByte;
+         this.retrievedImage = 'data:image/jpeg;base64,' + this.base64Data;
+         this.bookDetails[i].picByte=this.retrievedImage;
+        }
+      }
+    },
+    error=>{alert("No Book found for this search criteria!!");
+    this.showBookDetails = false;
+  }
   );
   }
 

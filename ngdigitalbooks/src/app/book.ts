@@ -9,7 +9,7 @@ export class Book {
 	active!:string;
 	status!:string;
 	 content!:string;
-
+	 picByte: any;
      constructor(){
          
      }

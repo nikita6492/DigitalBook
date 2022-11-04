@@ -26,6 +26,14 @@ export class UserComponent implements OnInit {
   bookId!:number;
   isAddedBookForm:boolean=false;
   isEditBookForm:boolean=false;
+  //for image
+  selectedFile!: File;
+  retrievedImage: any;
+  base64Data: any;
+  retrieveResonse: any;
+  message!: string;
+  imageName: any;
+
   ngOnInit(): void {
     this.bookForm = this.formBuilder.group({
       id: [{ value: null, disabled: true }],
@@ -50,6 +58,10 @@ public addBookFormOpen(){
   this.bookForm.reset();
   this.save=false;
 }
+public onFileChanged(event:any) {
+  //Select File
+  this.selectedFile = event.target.files[0];
+}
   public addBook(){
     this.book.title=this.bookForm.controls['title'].value;
     this.book.category=this.bookForm.controls['category'].value;
@@ -62,15 +74,10 @@ public addBookFormOpen(){
     let user_email=sessionStorage.getItem('user_email');
     this.book.authorEmail=`${user_email}`;
     let token=sessionStorage.getItem(`${user_email}`);
-    console.log(token)
-    this._service.addBookToRemote(this.book,token).subscribe(
+   const bookFormData=this.prepareFormData(this.book);
+    this._service.addBookToRemote(bookFormData,token).subscribe(
     data=>{console.log(data);
-    alert("Book is successfully added !!");
-    this._service.viewAddedBooks(user_email,token).subscribe(data=>{
-      console.log(typeof data,data);
-      this.bookArray=data;
-     console.log(this.bookArray);
-    })}
+    alert("Book is successfully added !!");}
     )
     this.isAddedBookForm =false;
     this.showBookDetails=false;
@@ -78,18 +85,41 @@ public addBookFormOpen(){
       this.bookForm.reset();
   }
 
+  prepareFormData(book:Book): FormData{
+    const formData = new FormData();
+
+    formData.append(
+      'book', new Blob([JSON.stringify(book)],{type:'application/json'})
+    );
+    formData.append(
+      'imageFile',this.selectedFile, this.selectedFile.name
+    );
+      return formData;
+  }
+
   public viewAddedBooks(){
     this.isAddedBookForm=false;
     this.isEditBookForm=false;
-    this.showBookDetails=true;
+    this.showBookDetails=false;
     let user_email=sessionStorage.getItem('user_email');
     let token=sessionStorage.getItem(`${user_email}`);  
    this._service.viewAddedBooks(user_email,token).subscribe(data=>{
-     console.log(typeof data,data);
      this.bookArray=data;
     console.log(this.bookArray);
+    if(this.bookArray.length>0){
     this.showBookDetails = true;
-     })
+    }
+    else{
+    alert("No Book has been added yet from your side!!");
+    }
+    if(this.bookArray.length>0){
+      for(let i=0; i<this.bookArray.length;i++){
+       this.base64Data = this.bookArray[i].picByte;
+       this.retrievedImage = 'data:image/jpeg;base64,' + this.base64Data;
+       this.bookArray[i].picByte=this.retrievedImage;
+      }
+    }
+     }) 
   }
   public editBook(book:Book){
     this.save=true;

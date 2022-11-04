@@ -31,11 +31,15 @@ export class ReaderComponent implements OnInit {
   bookSubscriptionArray!:Booksubscription[];
   subscriptionArray!:Subscription[];
   book=new Book();
+  searchBookObj!:Book;
   subscription=new Subscription();
   bookId!:number;
   content!:Book;
   isSearcBookFormEnabled:boolean = false;
   isSubscribedShowBookDetails: boolean =false;
+  invoicePrice:any;
+  base64Data: any;
+  retrievedImage: any;
 
   ngOnInit(): void {
     this.searchForm = this.formBuilder.group({
@@ -58,22 +62,26 @@ export class ReaderComponent implements OnInit {
     this.isSearcBookFormEnabled = true;
     this.isSubscribedShowBookDetails=false;
     this.showBookDetails=false;
+    this.searchForm.reset();
   }
 
 
    searchBook(){
+     this.searchBookObj=new Book();
      this.isSubscribedShowBookDetails=false;
     if(this.searchForm.controls['title'].value!=null){
-      this.book.title=this.searchForm.controls['title'].value;
+      console.log("title");
+      this.searchBookObj.title=this.searchForm.controls['title'].value;
     }
     if(this.searchForm.controls['category'].value!=null){
-      this.book.category=this.searchForm.controls['category'].value;
+      console.log("category");
+      this.searchBookObj.category=this.searchForm.controls['category'].value;
     }
     if(this.searchForm.controls['author'].value!=null){
-      this.book.author=this.searchForm.controls['author'].value;
+      this.searchBookObj.author=this.searchForm.controls['author'].value;
     }
    
-    this._service.searchBookForReaderFromRemote(this.book).subscribe(
+    this._service.searchBookForReaderFromRemote(this.searchBookObj).subscribe(
       data => {
         console.log("response received", data);
         this.bookArray = data;
@@ -81,6 +89,13 @@ export class ReaderComponent implements OnInit {
         this.isSearcBookFormEnabled=false;
         this.showBookDetails = true;
         this.searchForm.reset();
+        if(this.bookArray.length>0){
+          for(let i=0; i<this.bookArray.length;i++){
+           this.base64Data = this.bookArray[i].picByte;
+           this.retrievedImage = 'data:image/jpeg;base64,' + this.base64Data;
+           this.bookArray[i].picByte=this.retrievedImage;
+          }
+        }
       },
       error=>{
         alert("No Book Found for this search criteria !!");
@@ -164,12 +179,37 @@ export class ReaderComponent implements OnInit {
         this.subscribedBookArray=data;
         this.isSubscribedShowBookDetails=true;
         this.isSubscribed=true;
+        if(this.subscribedBookArray.length>0){
+          for(let i=0; i<this.subscribedBookArray.length;i++){
+           this.base64Data = this.subscribedBookArray[i].picByte;
+           this.retrievedImage = 'data:image/jpeg;base64,' + this.base64Data;
+           this.subscribedBookArray[i].picByte=this.retrievedImage;
+          }
+        }
       },
       error =>{
         alert("No subscribed books for you !!");
         this.isSubscribedShowBookDetails=false;
       }
     );
+
+  }
+
+  viewInvoice(){
+    this.isSearcBookFormEnabled=false;
+    this.showBookDetails=false;
+    this.isSubscribedShowBookDetails=false;
+    let user_email=sessionStorage.getItem("user_email");
+    let token=sessionStorage.getItem(`${user_email}`);
+    this._service.getInvoiceFromRemote(user_email,token).subscribe(
+      data=>{this.invoicePrice=data;
+        this.dialog.open(ViewcomponentComponent,{
+          width:'330px',
+          height:'400px',
+          data:"The total price of the subscribed books is: "+this.invoicePrice
+          
+        });
+      });
 
   }
 }

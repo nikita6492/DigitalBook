@@ -21,3 +21,8 @@ table {
     background-color: #04AA6D;
     color: white;
   }
+  img{
+    height: 50px;
+    width: 50px;
+    display: block;
+  }

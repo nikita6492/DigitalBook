@@ -70,7 +70,7 @@
                     value="No"
                 /> &nbsp;No &nbsp;
         </div></div>
-        <div class="form-group" id="radio-button">
+        <div class="form-group" id="radio-button" *ngIf="!isEditEnabled">
           <div style="margin-left: 4px;">
             <label>Status: &nbsp;&nbsp;&nbsp;</label>
                 <input
@@ -94,8 +94,17 @@
         <textarea
           class="form-control"
           formControlName="content"
-          name="content" rows="15" cols="15"
+          name="content" rows="10" cols="10"
         ></textarea>
+      </div>
+      <div class="form-group clearfix" *ngIf="!isEditEnabled">
+        <label>Book Image:</label>
+        <input
+          type="file"
+          class="form-control"
+          formControlName="bookimage"
+          name="bookImage" (change)="onFileChanged($event)"
+        />
       </div>
         <div class="form-group">
           <button
@@ -187,7 +196,7 @@
                     value="No"
                 /> &nbsp;No &nbsp;
         </div></div>
-        <div class="form-group" id="radio-button">
+        <div class="form-group" *ngIf="!isEditEnabled" id="radio-button">
             <div class="input-group" style="margin-left: 4px;" >
                 <label>Status:  &nbsp;</label>
                 <input
@@ -211,9 +220,10 @@
           <textarea
             class="form-control"
             formControlName="content"
-            name="content" rows="15" cols="15"
+            name="content" rows="10" cols="10"
           ></textarea>
         </div>
+
       <div class="col-xs-12">
         <div class="form-group">
           <button
@@ -233,7 +243,7 @@
   <table class="table table-bordered">
     <thead>
       <tr>
-        <th>Book ID</th>
+        <th>Book Logo</th>
         <th>Book Title</th>
         <th>Book Author</th>
         <th>Book Category</th>
@@ -246,7 +256,7 @@
     </thead>
     <tbody>
        <tr *ngFor="let book of bookArray">
-        <td>{{ book.id }}</td>
+        <td><img src="{{book.picByte}}"></td>
         <td>{{ book.title }}</td>
         <td>{{ book.author }}</td>
         <td>{{ book.category }}</td>
